@@ -1,0 +1,35 @@
+Index: src/TextEditor/TextEditor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package TextEditor;\r\n\r\nimport Strategies.TextFormattingStrategy;\r\n\r\nimport java.io.*;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class TextEditor {\r\n    private static TextEditor instance;\r\n    private final Map<String, String> documents;\r\n\r\n    private TextEditor() {\r\n        documents = new HashMap<>();\r\n    }\r\n    public static TextEditor getInstance() {\r\n        if (instance == null) {\r\n            instance = new TextEditor();\r\n        }\r\n        return instance;\r\n    }\r\n\r\n    public void openDocument(String document) {\r\n        File file = new File(document);\r\n        if (file.exists() && file.isFile()) {\r\n            try {\r\n                BufferedReader reader = new BufferedReader(new FileReader(file));\r\n                StringBuilder content = new StringBuilder();\r\n                String line;\r\n                while ((line = reader.readLine()) != null) {\r\n                    content.append(line).append(\"\\n\");\r\n                }\r\n                reader.close();\r\n                documents.put(document, content.toString());\r\n                System.out.println(\"Opened document: \" + document);\r\n            } catch (IOException e) {\r\n                e.printStackTrace();\r\n            }\r\n        } else {\r\n            documents.put(document, \"\");\r\n            System.out.println(\"Created a new document: \" + document);\r\n        }\r\n    }\r\n\r\n    public void saveDocument(String document, String content) {\r\n        // Write the formatted content back to the file\r\n        try {\r\n            BufferedWriter writer = new BufferedWriter(new FileWriter(document));\r\n            writer.write(content);\r\n            writer.close();\r\n            System.out.println(\"Saved document: \" + document);\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    public String formatText(String text, TextFormattingStrategy strategy) {\r\n        return strategy.format(text);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/TextEditor/TextEditor.java b/src/TextEditor/TextEditor.java
+--- a/src/TextEditor/TextEditor.java	(revision e9c0fd96339a249f826dc2f4ad0b91c94220a5de)
++++ b/src/TextEditor/TextEditor.java	(date 1696355768132)
+@@ -43,7 +43,6 @@
+     }
+ 
+     public void saveDocument(String document, String content) {
+-        // Write the formatted content back to the file
+         try {
+             BufferedWriter writer = new BufferedWriter(new FileWriter(document));
+             writer.write(content);
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1696355255416)
++++ b/.idea/vcs.xml	(date 1696355255416)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
